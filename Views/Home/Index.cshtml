@@ -1,0 +1,60 @@
+﻿@model excercise.NumberToWords.Models.NumberModel;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>Please Enter Number To Convert</h2>
+
+<div>
+    <hr />
+    <form asp-action="Convert" id="convertForm">
+        <dl class="row">
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input type="number" style="width:50%" asp-for="Amount" class="form-control" step="0.01" min="0"
+                       oninput="validateDecimal(this)" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+                <span id="error-message" style="color:red;"></span>
+            </div>
+            <dt class="col-sm-2">
+                Amount In Words:
+            </dt>
+            <dd class="col-sm-10">
+                <span id="amountDisplay">@(Model == null ? "" : Model.StringAmount)</span>
+            </dd>
+        </dl>
+        <div>
+            <input type="submit" value="Convert" class="btn btn-success" />
+            <button type="button" onclick="resetForm()" class="btn btn-secondary">Clear</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function resetForm() {
+        console.log("Reset button clicked"); // Debugging line
+        var form = document.getElementById("convertForm");
+        if (form) {
+            form.elements['Amount'].value = '';
+            document.getElementById("amountDisplay").textContent = '';
+        } else {
+            console.log("Form not found"); // Debugging line
+        }
+    }
+    function validateDecimal(input) {
+        const value = input.value;
+        const maxTotalDigits = 15;
+      
+        // Split the string at the decimal point
+        const parts = value.split('.');
+
+        // Assign integer and decimal parts
+        const integerPart = parts[0].length;
+        const decimalPart = parts.length > 1 ? parts[1] : '0';
+
+        if (integerPart > maxTotalDigits) {
+            document.getElementById('error-message').textContent = `Please enter a number with up to ${maxTotalDigits} digits total.`;
+            input.value = value.slice(0, -1); // Remove last character
+        } 
+    }
+</script>
