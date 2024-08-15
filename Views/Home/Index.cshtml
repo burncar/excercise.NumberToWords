@@ -32,29 +32,28 @@
 
 <script>
     function resetForm() {
-        console.log("Reset button clicked"); // Debugging line
+        console.log("Reset button clicked"); 
         var form = document.getElementById("convertForm");
         if (form) {
             form.elements['Amount'].value = '';
             document.getElementById("amountDisplay").textContent = '';
         } else {
-            console.log("Form not found"); // Debugging line
+            console.log("Form not found"); 
         }
     }
     function validateDecimal(input) {
         const value = input.value;
         const maxTotalDigits = 15;
       
-        // Split the string at the decimal point
+       
         const parts = value.split('.');
 
-        // Assign integer and decimal parts
         const integerPart = parts[0].length;
         const decimalPart = parts.length > 1 ? parts[1] : '0';
 
         if (integerPart > maxTotalDigits) {
             document.getElementById('error-message').textContent = `Please enter a number with up to ${maxTotalDigits} digits total.`;
-            input.value = value.slice(0, -1); // Remove last character
+            input.value = value.slice(0, -1); 
         } 
     }
 </script>
