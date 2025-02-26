@@ -1,0 +1,137 @@
+﻿@model excercise.NumberToWords.Models.NumberModel;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2 id="hn" style="display:@(Model.InputCondition ? "block" : "none")">Please Enter Number To Convert</h2>
+<h2 id="hw"  style="display:@(!Model.InputCondition ? "block" : "none")">Please Enter Words To Convert To Number</h2>
+<div>
+    <hr />
+    <form asp-action="Convert" id="convertForm">
+        <input type="hidden" asp-for="InputCondition" id="inputCondition" value="@Model.InputCondition" />
+        <input type="hidden" asp-for="StringAmount"/>
+        <dl class="row">
+            <div id="numberInput" class="form-group" style="display:@(Model.InputCondition ? "block" : "none")">
+                <label asp-for="Amount" class="control-label"></label>
+                <input type="number" style="width:50%" asp-for="Amount" class="form-control" step="0.01" min="0"
+                       oninput="validateDecimal(this)" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+                <span id="error-message" style="color:red;"></span>
+            </div>
+            <div id="textInput" class="form-group" style="display:@(!Model.InputCondition ? "block" : "none")">
+                <label asp-for="InputAmount" class="control-label"></label>
+                <input type="text" style="width:50%" asp-for="InputAmount" class="form-control" step="0.01" min="0"
+                       oninput="validateWords(this)" />
+                <span asp-validation-for="InputAmount" class="text-danger"></span>
+                <span id="error-message-i" style="color:red;"></span>
+            </div>
+
+            <dt class="col-sm-2" hidden>
+                Amount In Words:
+            </dt>
+            <dd class="col-sm-10">
+                <span id="amountDisplay">@(Model == null ? "" : Model.StringAmount)</span>
+            </dd>
+        </dl>
+        <div>
+            <input type="submit" value="Convert" class="btn btn-success" />
+            <button type="button" onclick="resetForm()" class="btn btn-secondary">Clear</button>
+            <button type="button" onclick="toggleReset()" class="btn btn-secondary" id=btnToggleN
+                    style="display:@(Model != null && Model.InputCondition ? "block":"none")">
+                Number To Words
+            </button>
+            <button type="button" onclick="toggleReset()" class="btn btn-secondary" id=btnToggleW
+                    style="display:@(Model != null && !Model.InputCondition ? "block":"none")">
+                Words To Number
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function resetForm() {
+        console.log("Reset button clicked"); 
+        var form = document.getElementById("convertForm");
+        if (form) {
+            form.elements['Amount'].value = '';
+             form.elements['InputAmount'].value = '';
+            document.getElementById("amountDisplay").textContent = '';
+        } else {
+            console.log("Form not found"); 
+        }
+    }
+    // function toggleReset(){
+  
+     function toggleReset(){
+        var btnN = document.getElementById("btnToggleN");
+        var btnW = document.getElementById("btnToggleW");
+        var hn = document.getElementById("hn");
+        var hw = document.getElementById("hw");
+        //console.log(btn);
+        var inputCondition = document.getElementById("inputCondition");
+        var numberInput = document.getElementById("numberInput");
+        var textInput = document.getElementById("textInput");
+ 
+        if(btnN.style.display == "block"){
+            console.log(btnN.textContent);
+            inputCondition.value = false;
+            //document.getElementById("btnToggle").textContent = "Words To Number";
+           // document.getElementById("headerContent").textContent = "Please Enter Words To Convert To Number";
+            numberInput.style.display = "none";
+            textInput.style.display = "block";
+            btnN.style.display = "none";
+            btnW.style.display = "block";
+            hn.style.display = "none";
+            hw.style.display = "block";
+        }else{
+            inputCondition.value = true;
+            //document.getElementById("btnToggle").textContent = "Number To Words";
+           // document.getElementById("headerContent").textContent = "Please Enter Number To Convert To Words";
+            numberInput.style.display = "block";
+            textInput.style.display = "none";
+            btnW.style.display = "none";
+            btnN.style.display = "block";
+            hn.style.display = "block";
+            hw.style.display = "none";
+        }
+    }
+    function validateDecimal(input) {
+        const value = input.value;
+        const maxTotalDigits = 15;
+      
+       
+        const parts = value.split('.');
+
+        const integerPart = parts[0].length;
+        const decimalPart = parts.length > 1 ? parts[1] : '0';
+
+        if (integerPart > maxTotalDigits) {
+            document.getElementById('error-message').textContent = `Please enter a number with up to ${maxTotalDigits} digits total.`;
+            input.value = value.slice(0, -1); 
+        } 
+    }
+     function validateWords(input) {
+        const value = input.value;
+        const parts = value.split(" ");
+        console.log(parts);
+        const numberMap = {
+        "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4,
+        "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
+        "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
+        "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17,
+        "eighteen": 18, "nineteen": 19, "twenty": 20, "thirty": 30,
+        "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70,
+        "eighty": 80, "ninety": 90, "hundred": 100, "thousand": 1000,
+        "million": 1000000, "billion": 1000000000, "trillion": 1000000000000
+    };
+
+        parts.forEach((k,i) =>{
+            
+            if(!Object.hasOwn(numberMap, k)){
+                   document.getElementById('error-message-i').textContent = `Please enter a valid word number ${k}.`;
+            }else{
+                document.getElementById('error-message-i').textContent = ``;
+            }
+        });
+    }
+</script>
