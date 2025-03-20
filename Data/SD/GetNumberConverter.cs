@@ -65,7 +65,12 @@ namespace excercise.NumberToWords.Data.SD
                             result = result + temp;
                             temp = 0;
                         }
-                       
+                        else if (temp >= 100)
+                        {
+                            result = result + temp;
+                            temp = 0;
+                        }
+
                     }
                     else if (arr[i] == "and")
                     {
@@ -107,6 +112,10 @@ namespace excercise.NumberToWords.Data.SD
                         else
                         {
                             temp = temp + numberMap[arr[i].ToLower()];
+                            if(i == arr.Count() - 1)
+                            {
+                                result += temp;
+                            }
                         }
                         
                     }
