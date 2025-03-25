@@ -30,6 +30,7 @@ namespace excercise.NumberToWords.Data.SD
         {
             decimal result = 0;
             decimal temp = 0;
+            List<decimal> digitized = new List<decimal>();
             List<string> arr = words.Split(" ").ToList();
             int ctr = 0;
             for(int i=0; i < arr.Count(); i++) {
@@ -42,35 +43,53 @@ namespace excercise.NumberToWords.Data.SD
                         || numberMap[arr[i].ToLower()] == 1000000000000
                         )
                     {
-
                        
-                        temp = temp * numberMap[arr[i].ToLower()];
+                        if(result < numberMap[arr[i].ToLower()])
+                        {
+                            result = result + temp;
+                            result = result * numberMap[arr[i].ToLower()];
+                            temp = 0;
+                        }
+                        else
+                        {
+                            
+                            
+                            digitized.Add(result);
+                            result = 0;
+                            temp = temp * numberMap[arr[i].ToLower()];
+                            result = result + temp;
+                            temp = 0;
+                        }
+                        
+                        
+                       
+                        
 
-                        if (temp >= 1000000000000)
-                        {
-                            result = result + temp;
-                            temp = 0;
-                        }
-                        else if (temp >= 1000000000)
-                        {
-                            result = result + temp;
-                            temp = 0;
-                        }
-                        else if (temp >= 1000000)
-                        {
-                            result = result + temp;
-                            temp = 0;
-                        }else if(temp >= 1000)
-                        {
-                            result = result + temp;
-                            temp = 0;
-                        }
-                        else if (temp >= 100)
-                        {
-                            result = result + temp;
-                            temp = 0;
-                        }
-
+                        //if (temp >= 1000000000000)
+                        //{
+                        //    result = result + temp;
+                        //    temp = 0;
+                        //}
+                        //else if (temp >= 1000000000)
+                        //{
+                        //    result = result + temp;
+                        //    temp = 0;
+                        //}
+                        //else if (temp >= 1000000)
+                        //{
+                        //    result = result + temp;
+                        //    temp = 0;
+                        //}else if(temp >= 1000)
+                        //{
+                        //    result = result + temp;
+                        //    temp = 0;
+                        //}
+                        //else if (temp >= 100)
+                        //{
+                        //    result = result + temp;
+                        //    temp = 0;
+                        //}
+                      
                     }
                     else if (arr[i] == "and")
                     {
@@ -131,8 +150,11 @@ namespace excercise.NumberToWords.Data.SD
                 }
 
             }
-
-
+           
+            foreach (var item in digitized)
+            {
+                result += item;
+            }
             return result;
         }
 
